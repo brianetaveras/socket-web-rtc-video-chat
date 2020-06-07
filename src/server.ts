@@ -22,6 +22,7 @@ export class Server {
         this.app = express();
         this.httpServer = createServer(this.app);
         this.io = socketIO(this.httpServer);
+        this.users = {};
     }
 
     private registerRoutes():void{
@@ -41,7 +42,15 @@ export class Server {
                 name: `User #${Object.keys(this.users).length + 1}`
             }
 
+            socket.emit('updateUserList', this.users);
+            socket.broadcast.emit('updateUserList', this.users);
             console.log(`User #${Object.keys(this.users).length + 1} joined the partey`);
+            
+            socket.on('disconnect', ()=>{
+                delete this.users[socket.id];
+                socket.broadcast.emit('updateUserList', this.users);
+            })
+
             
         })
     }

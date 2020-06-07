@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Video chat app yo</title>
     <link rel="stylesheet" href="style.css">
+    <script src="./js/socket.io.js"></script>
 </head>
 <body>
     <header>
@@ -22,8 +23,7 @@
     <section class="video-section">
         <div class="user-list">
             <h4>User List</h4>
-            <ul>
-                <li>User #1</li>
+            <ul id="user-list">
             </ul>
         </div>
         <div class="video-container">
@@ -31,6 +31,6 @@
             <video  id="my-video" autoplay muted class="my-video"></video>
         </div>
     </section>
-    <script src="./js/index.js"></script>
+    <script type="module" src="./js/index.js"></script>
 </body>
 </html>
