@@ -51,7 +51,19 @@ export class Server {
                 socket.broadcast.emit('updateUserList', this.users);
             })
 
-            
+            socket.on('callFriend', ({offer, to})=>{
+                socket.to(to).emit('friendCalling', {
+                    offer,
+                    socket: socket.id
+                });
+            });
+
+            socket.on('answerCall', ({answer, to}) =>{
+                socket.to(to).emit('callAnswered', {
+                    socket: socket.id,
+                    answer
+                })
+            })
         })
     }
 
