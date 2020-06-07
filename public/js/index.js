@@ -14,7 +14,6 @@ error=>{
 }
 )
 
-
 function callFriend(id){
     console.log(id);
 }
