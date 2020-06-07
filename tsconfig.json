@@ -1,0 +1,17 @@
+{
+    "compilerOptions": {
+      "sourceMap": true,
+      "target": "es2017",
+      "outDir": "./dist",
+      "baseUrl": "./src",
+      "watch": true,
+      "noEmit": true
+    },
+    "compileOnSave": true,
+    "include": [
+      "./src/**/*.ts"
+    ],
+    "exclude": [
+      "./node_modules"
+    ]
+  }
