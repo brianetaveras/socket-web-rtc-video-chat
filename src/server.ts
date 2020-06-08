@@ -32,7 +32,7 @@ export class Server {
     }
 
     private appSetup():void{
-        this.app.use(express.static(path.join(__dirname, "../public")));
+        this.app.use(express.static(path.join(__dirname, "./public")));
     }
 
     private handleSocketConnections():void{

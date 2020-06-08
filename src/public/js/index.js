@@ -10,16 +10,17 @@ navigator.getUserMedia({video: true, audio: true}, stream =>{
     if(my_video){
         my_video.srcObject = stream;
     }
-    stream.getTracks().forEach(track =>{
-        peerConnection.addTrack(track, stream);
-    })
 
-    peerConnection.ontrack = function({streams: [stream]}) {
-        if(friends_video){
+    stream.getTracks().forEach(track => peerConnection.addTrack(track, stream));
+
+    peerConnection.ontrack = function({ streams: [stream] }) {
+        if (friends_video) {
+            console.log('thing added.')
             friends_video.srcObject = stream;
         }
-    }
+    };
 },
+
 error=>{
     console.error(error.message);
 }
@@ -50,8 +51,7 @@ function addUserToList(user){
 sio.on('updateUserList', (users) =>{
     user_list.innerHTML = ``;
     for(const user in users){
-        user_list.appendChild(addUserToList(users[user]));
-        
+        user_list.appendChild(addUserToList(users[user]));   
     }
 });
 
@@ -79,7 +79,7 @@ sio.on('callAnswered', async ({socket, answer}) =>{
         new RTCSessionDescription(answer)
     );
 
-    callFriend({id: socket});
+    // callFriend({id: socket});
 })
 
 
