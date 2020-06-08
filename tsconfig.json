@@ -1,11 +1,11 @@
 {
     "compilerOptions": {
       "sourceMap": true,
-      "target": "es2017",
+      "target": "ES3",
       "outDir": "./dist",
       "baseUrl": "./src",
       "watch": true,
-      "noEmit": true
+      "noEmit": false
     },
     "compileOnSave": true,
     "include": [
