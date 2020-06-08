@@ -1,6 +1,7 @@
 const sio = io();
 const {RTCPeerConnection, RTCSessionDescription} = window;
-const peerConnection = new RTCPeerConnection();
+const config = {iceServers: [{urls: 'stun:stun.services.mozilla.org'}]}
+const peerConnection = new RTCPeerConnection(config);
 // Let's add all DOM elements here
 const my_video = document.getElementById('my-video');
 const friends_video = document.getElementById('friends-video');
@@ -15,7 +16,6 @@ navigator.getUserMedia({video: true, audio: true}, stream =>{
 
     peerConnection.ontrack = function({ streams: [stream] }) {
         if (friends_video) {
-            console.log('thing added.')
             friends_video.srcObject = stream;
         }
     };
@@ -40,7 +40,6 @@ function addUserToList(user){
     const li = document.createElement('li');
     li.innerHTML = `${user.id}`
 
-    
     li.addEventListener('click', () =>{
         callFriend(user);
     });
@@ -56,22 +55,15 @@ sio.on('updateUserList', (users) =>{
 });
 
 sio.on('friendCalling', async ({offer, socket}) =>{ 
-    await peerConnection.setRemoteDescription(
-        new RTCSessionDescription(offer)
-    );
-    const answer = await peerConnection.createAnswer();
-    await peerConnection.setLocalDescription(new RTCSessionDescription(answer));
-
-    if(confirm('Someone is calling you. Want to answer?')){
+        await peerConnection.setRemoteDescription(
+            new RTCSessionDescription(offer)
+        );
+        const answer = await peerConnection.createAnswer();
+        await peerConnection.setLocalDescription(new RTCSessionDescription(answer));
         sio.emit('answerCall', {
             answer,
             to: socket
         });
-
-
-    } else {
-        // do nothing?
-    }
 });
 
 sio.on('callAnswered', async ({socket, answer}) =>{
