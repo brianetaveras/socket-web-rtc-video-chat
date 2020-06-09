@@ -6,6 +6,7 @@
     <title>Video chat app yo</title>
     <link rel="stylesheet" href="style.css">
     <script src="./js/socket.io.js"></script>
+    <script src="./js/simplepeer.min.js"></script>
 </head>
 <body>
     <header>
@@ -27,7 +28,7 @@
             </ul>
         </div>
         <div class="video-container">
-            <video controls poster="https://techcrunch.com/wp-content/uploads/2016/10/tv-countdown.gif?w=430&h=230&crop=1" id="friends-video" autoplay class="friends-video"></video>
+            <video playInline controls poster="https://techcrunch.com/wp-content/uploads/2016/10/tv-countdown.gif?w=430&h=230&crop=1" id="friends-video" autoplay class="friends-video"></video>
             <video poster="https://techcrunch.com/wp-content/uploads/2016/10/tv-countdown.gif?w=430&h=230&crop=1"  id="my-video" autoplay muted class="my-video"></video>
         </div>
     </section>

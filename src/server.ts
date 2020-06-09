@@ -37,33 +37,47 @@ export class Server {
 
     private handleSocketConnections():void{
         this.io.on('connection', socket =>{
-            this.users[socket.id] = {
-                id: socket.id,
-                name: `User #${Object.keys(this.users).length + 1}`
+            if(!this.users[socket.id]){
+                this.users[socket.id] = {
+                    id: socket.id,
+                    name: `User #${Object.keys(this.users).length + 1}`
+                }
             }
+
+            socket.emit('yourID', socket.id);
+
+            socket.on('callUser', ({to, signal, from}) =>{
+                socket.to(to).emit('hey', {signal, from})
+            })
+
+            socket.on('acceptCall', ({signal, to, })=>{
+                console.log('signal received...')
+                socket.to(to).emit('callAccepted', signal);
+            })
 
             socket.emit('updateUserList', this.users);
             socket.broadcast.emit('updateUserList', this.users);
-            console.log(`User #${Object.keys(this.users).length + 1} joined the partey`);
             
             socket.on('disconnect', ()=>{
                 delete this.users[socket.id];
                 socket.broadcast.emit('updateUserList', this.users);
-            })
-
-            socket.on('callFriend', ({offer, to})=>{
-                socket.to(to).emit('friendCalling', {
-                    offer,
-                    socket: socket.id
-                });
             });
 
-            socket.on('answerCall', ({answer, to}) =>{
-                socket.to(to).emit('callAnswered', {
-                    socket: socket.id,
-                    answer
-                })
-            })
+
+
+            // socket.on('callFriend', ({data, to})=>{
+            //     socket.to(to).emit('friendCalling', {
+            //         data,
+            //         socket: socket.id
+            //     });
+            // });
+
+            // socket.on('answerCall', ({answer, to}) =>{
+            //     socket.to(to).emit('callAnswered', {
+            //         socket: socket.id,
+            //         answer
+            //     })
+            // })
         })
     }
 
