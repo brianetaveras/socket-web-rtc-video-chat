@@ -16,13 +16,14 @@ navigator.getUserMedia({video: true, audio: true}, stream =>{
 
     peerConnection.ontrack = function({ streams: [stream] }) {
         if (friends_video) {
+            console.log(stream)
             friends_video.srcObject = stream;
         }
     };
 },
 
 error=>{
-    console.error(error.message);
+    console.error('Error', error.message);
 }
 );
 
