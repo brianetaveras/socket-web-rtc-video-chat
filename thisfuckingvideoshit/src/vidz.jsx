@@ -18,8 +18,6 @@ const Video = props => {
 
     useEffect(() => { 
       if( props.stream ){
-        console.log('Whipple fuck')
-        console.log( props.stream )
         setStreamState({ stream: props.stream, active: true });
       }
     }, [props.stream]);
@@ -44,7 +42,7 @@ const Video = props => {
     }
 
     return (
-        <div className="stream-block user-stream">
+        <div className="stream-block">
             <video style={{'background': 'black'}} ref={ videoRef } autoPlay playsInline muted controls></video>
            { props.user === 'self' && <button onClick={ handleClick }>{ streamState.active ? 'Stop' : 'Start' } Video </button> }
         </div>
@@ -72,7 +70,7 @@ const Available = props => {
     }
     return (
         <ul>
-            { props.available.map( user => <button key={ user } value={ user } onClick={ handleCall }>Call User</button> ) }
+            { props.available.map( user => user === props.userId ? null : <button key={ user } value={ user } onClick={ handleCall }>Call User</button> ) }
         </ul>
     );
 }
@@ -82,7 +80,8 @@ const Chat = () => {
     const [chatSession, setChatSession] = useState({
         partnerStream: null,
         partnerData: null,
-        userStream: null
+        userStream: null,
+        userId: null
     });
 
     const [callData, setCallData] = useState({
@@ -97,24 +96,22 @@ const Chat = () => {
     });
 
     const [ usersOnline, updateOnline ] = useState({})
-
     const [callController, setCallController] = useState(false);
 
     const socket = useRef();
 
     const setUserStream = stream => setChatSession({...chatSession, userStream: stream});
-    const setPartnerStream = stream => setChatSession({...chatSession, partnerStream: stream})
+    const setPartnerStream = stream => setChatSession({...chatSession, partnerStream: stream});
 
     useEffect(() => {
-        socket.current = io.connect('http://localhost:8000');//("https://65956de79733.ngrok.io/");
+        socket.current = io.connect("https://65956de79733.ngrok.io/");
     
-        socket.current.on("init", (id) => {
-          const vidCall = new VideoCall(id, socket);
-          setCallController( vidCall );
+        socket.current.on("init", id => {
+          setCallController( new VideoCall(id, socket) );
+          setChatSession({...chatSession, userId: id });
         })
 
         socket.current.on("usersOnline", (users) => {
-            console.log(users)
           updateOnline({...users});
         })
     
@@ -133,7 +130,7 @@ const Chat = () => {
             <Video user='self' setUserStream={setUserStream} />
             { chatSession.partnerStream && <Video user={callData.caller} stream={chatSession.partnerStream} callController={callController} /> }
             { callData.caller.signal && <Caller  caller={ callData.caller } answer={ callController.acceptCall } userStream={ chatSession.userStream } answerCallback={ setPartnerStream } /> }
-            { callController && <Available available={ Object.keys(usersOnline) } userStream={ chatSession.userStream } callPeer={ callController.callPeer } setPartnerStream={ setPartnerStream } /> }
+            { callController && <Available available={ Object.keys(usersOnline) } userStream={ chatSession.userStream } userId={ chatSession.userId } callPeer={ callController.callPeer } setPartnerStream={ setPartnerStream } /> }
         </div>
     );
 }
