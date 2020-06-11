@@ -1,6 +1,6 @@
 import React from 'react';
 
-import Chat from './vidz';
+import Chat from './Chat';
 
 import './App.css';
 

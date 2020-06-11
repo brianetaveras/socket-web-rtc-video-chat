@@ -1,6 +1,7 @@
 import React, {useState, useEffect, useRef} from 'react';
 import VideoCall from './VideoCall';
 import io from "socket.io-client";
+import './index.css';
 
 import Video from './Video';
 import { Caller, Available } from './PeerConnections';
@@ -41,15 +42,17 @@ const Chat = () => {
         })
         socket.current.on("callRequest", (data) => {
           setCallData({...callData, caller: { 
-              id: data.from, name: data.from, signal: data.signal 
+              id: data.from, name: data.from, signal: data.signal
             }
            });
         });
       }, []);
     return ( 
-        <div>
-            <Video user='self' setUserStream={setUserStream} />
-            { chatSession.partnerStream && <Video user={callData.caller} stream={chatSession.partnerStream} callController={callController} /> }
+        <div className='chat-container'>
+            <div className='videos'>
+                <Video user='self' setUserStream={setUserStream} />
+                { chatSession.partnerStream && <Video user={callData.caller} stream={chatSession.partnerStream} callController={callController} /> }
+            </div>
             { callData.caller.signal && <Caller  caller={ callData.caller } answer={ callController.acceptCall } userStream={ chatSession.userStream } answerCallback={ setPartnerStream } /> }
             { callController && <Available available={ Object.keys(usersOnline) } userStream={ chatSession.userStream } userId={ chatSession.userId } callPeer={ callController.callPeer } setPartnerStream={ setPartnerStream } /> }
         </div>

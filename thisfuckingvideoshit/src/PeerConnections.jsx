@@ -13,7 +13,6 @@ const Caller = props => {
 }
 
 const Available = props => {
-    console.log( props.callPeer )
     const handleCall = e => {
         e.preventDefault();
         props.callPeer( e.target.value, props.userStream ,props.setPartnerStream );
