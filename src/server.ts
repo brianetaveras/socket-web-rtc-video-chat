@@ -8,7 +8,6 @@ const io = socket(server);
 const users = {};
 
 io.on('connection', socket => {
-    console.log(users)
     if (!users[socket.id]) {
         users[socket.id] = socket.id;
     }
@@ -31,4 +30,3 @@ io.on('connection', socket => {
 });
 
 server.listen(8000, () => console.log('server is running on port 8000'));
-
