@@ -24,15 +24,15 @@ const Chat = () => {
         },
         callAccepted: false,
     });
-
     const [ usersOnline, updateOnline ] = useState({})
     const [callController, setCallController] = useState(false);
+    
     const socket = useRef();
     const setUserStream = stream => setChatSession({...chatSession, userStream: stream});
     const setPartnerStream = stream => setChatSession({...chatSession, partnerStream: stream});
 
     useEffect(() => {
-        socket.current = io.connect('https://8d1cfefbdbc8.ngrok.io/');
+        socket.current = io.connect('http://localhost:8000');
         socket.current.on("init", id => {
           setCallController( new VideoCall(id, socket) );
           setChatSession({...chatSession, userId: id });

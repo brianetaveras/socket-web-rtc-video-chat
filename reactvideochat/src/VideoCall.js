@@ -1,5 +1,4 @@
 import Peer from 'simple-peer';
-import io from "socket.io-client";
 
 class VideoCall {
     constructor(userId, socket){
@@ -26,17 +25,16 @@ class VideoCall {
         });
 
         peer.on("signal", data => {
-          console.log(data)
-            this.socket.current.emit("callUser", { userToCall: id, signalData: data, from: this.userId })
-        })
+          this.socket.current.emit("callUser", { userToCall: id, signalData: data, from: this.userId })
+        });
 
         peer.on("stream", stream => {
-              setPartnerVideo(stream);
+          setPartnerVideo(stream);
         });
 
         this.socket.current.on("callAccepted", signal => {
-        peer.signal(signal);
-        })
+          peer.signal(signal);
+        });
     }
 
   acceptCall = ( caller, setPartnerVideo, userStream ) => {
@@ -48,11 +46,9 @@ class VideoCall {
 
     peer.on("signal", data => {
       this.socket.current.emit("acceptCall", { signal: data, to: caller.id })
-    })
+    });
 
     peer.on("stream", stream => {
-      console.log('enjoy your stream')
-      console.log(stream);
       setPartnerVideo(stream);
     });
 
